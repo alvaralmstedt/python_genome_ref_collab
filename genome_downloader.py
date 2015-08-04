@@ -1,8 +1,9 @@
 import argparse
 import os
-
+import re
 import urllib
 import ftplib
+import datetime
 
 directories = []
 
@@ -61,6 +62,7 @@ print "\n"
 ftp = ftplib.FTP("ftp.wip.ncbi.nlm.nih.gov")
 ftp.login()
 ftp.cwd("genomes")
+
 # print ftp.retrlines('LIST')
 
 # this line converts the genomes directory into a list
@@ -94,17 +96,69 @@ testifDirectory(ftp, files)
 
 print directories.sort()
 
+# this dict will contain all directories in genomes as keys and lists of their contents as values
+genome_subfolders = {}
+
 for i in directories:
     ftp.cwd(i)
     subfolder = ftp.nlst()
-    print subfolder
+#   print subfolder
+    genome_subfolders[i] = subfolder
     ftp.cwd('..')
     counter += 1
-    if counter > 3:
+    if counter > 6:   # temporary counter to limit testing time
         break
 
-print directories
-print "done"
+print "printing genome_subfolders"
+print genome_subfolders
+# print directories
+
+print "starting search"
+
+pwd = ftp.pwd()
+# This will iterate over the keys in genome_subfolders dict and match to user provided taxlist
+
+lstnam = []
+filnam = ""
+
+
+#for key in genome_subfolders.iterkeys():
+#    lstnam.append(key.startswith(taxlist[for i in range(len(taxlist))]))
+
+
+#for i in np.where(lstnam[0]):
+#    genome_subfolders.keys()[i]
+#    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov", filename=str(pwd) + "/" + str(genome_subfolders.keys()[i]) + "/" + genome_subfolders.get((genome_subfolders.keys()[i])))
+
+
+# Download loop. Matches folder names that starts with user-provided taxlist names and
+# tries to download the contents of the folder. Will also try to download directories, however.
+# I may put this into a function later so that some variables can be altered.
+# So far it only matches to folders in the base genomes/ directory.
+
+iteration = 0
+iteration2 = 0
+for key in genome_subfolders.keys():
+    for tax in taxlist:
+        if key.startswith(tax):
+            iteration2 = 0
+            print "%s WAS found in %s" % (tax, key)
+            for fil in genome_subfolders[key]:
+                try:
+                    if not os.path.exists(str(key)):
+                        print "creating directory: %s" % (str(key))
+                        os.makedirs(str(key))
+                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), str(key) + "/" + str(fil))
+                    print "%s was downloaded to the folder %s at time: %s" % (fil, str(key), datetime.datetime.now())
+                except Exception:
+                    print "%s couldn't be downloaded" % (fil)
+
+                iteration2 += 1
+        else:
+            print "%s was not found in %s" % (tax, key)
+
+    iteration += 1
+
 # this line compares the two lists and makes them into a third list
 # compared_lists = list(set(taxlist) & set(ftplist))
 # print compared_lists
@@ -118,3 +172,6 @@ print "done"
 
 
 # download: urllib.urlretrieve('ftp://server/path/to/file', 'file')
+
+
+print "done"
