@@ -1,11 +1,28 @@
+#!/usr/bin/python
+
+# Written by: Alvar Almstedt
+
 import argparse
 import os
 import re
 import urllib
 import ftplib
 import datetime
+import signal
 
 directories = []
+
+
+class TimeoutException(Exception):  # Custom exception class
+    pass
+
+
+def timeout_handler(signum, frame):  # Custom signal handler
+    raise TimeoutException
+
+
+# Changes the behavior of the SIGLARM
+signal.signal(signal.SIGALRM, timeout_handler)
 
 
 def testifDirectory(ftp, filenames):
@@ -19,15 +36,24 @@ def testifDirectory(ftp, filenames):
     #    filenames = []
     #    ftp.retrlines('NLST',filenames.append)
     for name in filenames:
+        signal.alarm(10)  # alarm is rung after 10 seconds
         try:
             if name != "all":
                 ftp.cwd(name)
                 directories.append(name)
                 print name
-                ftp.cwd('..')
+                if name == "CLUSTERS":
+                    ftp.cwd("/genomes/Bacteria")
+                else:
+                    ftp.cwd('..')
         except ftplib.error_perm:
-            # put whatever you want to do with files here
+            print "%s is not a directory, continuing" % name
             continue
+        except TimeoutException:
+            print "%s caused a timeout after 10 seconds" % name
+            continue
+        else:
+            signal.alarm(0)  # resets alarm
             # put whatever you want to do after processing the files
             # and sub-directories of a directory here
 
@@ -35,10 +61,11 @@ def testifDirectory(ftp, filenames):
 # assigns argument variable
 parser = argparse.ArgumentParser()
 
+# argparse explanations: https://infohost.nmt.edu/tcc/help/pubs/python/web/argparse-add_argument.html
 # adds arguments to the magic "parser" variable
 parser.add_argument("taxlistpath", nargs="?", type=argparse.FileType('r'), help='path to your list')
-parser.add_argument("output", nargs="?", default=os.getcwd(), help='specify output path, else cwd')
-parser.add_argument("ftpurl", nargs="?", help='specify top level ftp url to search down from')
+parser.add_argument("output", nargs="?", type=str, help='specify output path, else cwd')
+parser.add_argument("ftpurl", nargs="?", action='store', type=str, help='specify top level ftp url to search down from')
 
 # parser.add_argument("-f", "--family", action="store_true", help='organism family to download genomes from')
 # parser.add_argument("-p", "-phylum", action="store_true", help='phyla to download genomes from')
@@ -53,15 +80,40 @@ args = parser.parse_args()
 
 # makes a the text list into a python list
 taxlist = args.taxlistpath.read().splitlines()
+out = str(args.output) + "/"
+
+if out is not None:
+    print "output path is: " + out
+else:
+    out = str(os.getcwd())
+
+print "Your list: "
 print taxlist
 print "\n"
-# ftpurl = args.ftpurl
-# print ftpurl
+ftpurl = args.ftpurl
+ftpurl = str(ftpurl)
+print "Will search from %s" % ftpurl
 
 # this connects to the ncbi ftp server and enters the "genomes" directory
 ftp = ftplib.FTP("ftp.wip.ncbi.nlm.nih.gov")
 ftp.login()
-ftp.cwd("genomes")
+
+# This will read the input url so that it is able to index and download from different places on the ftp
+if ftpurl is not None:
+    if ftpurl[-9:] == "/genomes/":
+        ftp.cwd("genomes")
+    elif ftpurl[-9:] == "Bacteria/":
+        ftp.cwd("genomes")
+        ftp.cwd("Bacteria")
+    elif ftpurl[-9:] == "ia_DRAFT/":
+        ftp.cwd("genomes")
+        ftp.cwd("Bacteria_DRAFT")
+    else:
+        print "Url mismatch detected, defaulting to searching in /genomes/"
+        ftp.cwd("genomes")
+else:
+    print "No url detected, defaulting to searching in /genomes/"
+    ftp.cwd("genomes")
 
 # print ftp.retrlines('LIST')
 
@@ -81,8 +133,10 @@ ftpdir = ftp.retrlines('NLST', files.append)
 # ftpdir = ftpdir.splitlines()
 
 # print ftpdir
-print "before forloop"
+print "before for-loop"
 
+# First try on directory checking, is a lot faster than the current one but works really poorly:
+#
 # for r in files:
 #    print "alvar " + r + "\n"
 #    if r.upper().startswith('D'):
@@ -100,15 +154,22 @@ print directories.sort()
 genome_subfolders = {}
 
 for i in directories:
-    ftp.cwd(i)
-    subfolder = ftp.nlst()
-#   print subfolder
-    genome_subfolders[i] = subfolder
-    ftp.cwd('..')
-    counter += 1
-    if counter > 6:   # temporary counter to limit testing time
-        break
-
+    signal.alarm(30)
+    try:
+        ftp.cwd(i)
+        subfolder = ftp.nlst()
+        #   print subfolder
+        genome_subfolders[i] = subfolder
+        ftp.cwd('..')
+        counter += 1
+        if counter > 6:  # temporary counter to limit testing time
+            break
+    except TimeoutException:
+        print "Timed out after 30 seconds, continuing"
+        continue
+    else:
+        # Resets alarm
+        signal.alarm(0)
 print "printing genome_subfolders"
 print genome_subfolders
 # print directories
@@ -120,15 +181,6 @@ pwd = ftp.pwd()
 
 lstnam = []
 filnam = ""
-
-
-#for key in genome_subfolders.iterkeys():
-#    lstnam.append(key.startswith(taxlist[for i in range(len(taxlist))]))
-
-
-#for i in np.where(lstnam[0]):
-#    genome_subfolders.keys()[i]
-#    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov", filename=str(pwd) + "/" + str(genome_subfolders.keys()[i]) + "/" + genome_subfolders.get((genome_subfolders.keys()[i])))
 
 
 # Download loop. Matches folder names that starts with user-provided taxlist names and
@@ -145,13 +197,14 @@ for key in genome_subfolders.keys():
             print "%s WAS found in %s" % (tax, key)
             for fil in genome_subfolders[key]:
                 try:
-                    if not os.path.exists(str(key)):
-                        print "creating directory: %s" % (str(key))
-                        os.makedirs(str(key))
-                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), str(key) + "/" + str(fil))
+                    if not os.path.exists(out + str(key)):
+                        print "creating directory: %s" % (out + str(key))
+                        os.makedirs(out + str(key))
+                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                     print "%s was downloaded to the folder %s at time: %s" % (fil, str(key), datetime.datetime.now())
                 except Exception:
-                    print "%s couldn't be downloaded" % (fil)
+                    print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
+                    # print something to error file here
 
                 iteration2 += 1
         else:
