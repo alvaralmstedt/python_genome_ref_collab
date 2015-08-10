@@ -58,6 +58,12 @@ def testifDirectory(ftp, filenames):
             # and sub-directories of a directory here
 
 
+def download(folder, filenames, outputfolders):
+    local_filename = os.path.join(outputfolders + str(folder), str(filenames))
+    lf = open(local_filename, "wb")
+    ftp.retrbinary('RETR %s' % filenames, lf.write)
+    lf.close()
+
 # assigns argument variable
 parser = argparse.ArgumentParser()
 
@@ -79,13 +85,14 @@ parser.add_argument("ftpurl", nargs="?", action='store', type=str, help='specify
 args = parser.parse_args()
 
 # makes a the text list into a python list
-taxlist = args.taxlistpath.read().splitlines()
+taxlist = args.taxlistpath.read().splitlines() # this should be a capitalised list of species genus
 out = str(args.output) + "/"
 
 if out is not None:
     print "output path is: " + out
 else:
-    out = str(os.getcwd())
+    out = str(os.getcwd() + "/")
+    print "Your output path was defaulted to cwd:\n %s" % out
 
 print "Your list: "
 print taxlist
@@ -125,6 +132,7 @@ else:
 
 print "\n"
 
+ftp.set_debuglevel(0)
 counter = 0
 
 files = []
@@ -156,14 +164,15 @@ genome_subfolders = {}
 for i in directories:
     signal.alarm(30)
     try:
-        ftp.cwd(i)
-        subfolder = ftp.nlst()
-        #   print subfolder
-        genome_subfolders[i] = subfolder
-        ftp.cwd('..')
-        counter += 1
-        if counter > 6:  # temporary counter to limit testing time
-            break
+        if i != "CLUSTERS":
+            ftp.cwd(i)
+            subfolder = ftp.nlst()
+            print "indexing %s at time: %s" % (i, datetime.datetime.now())
+            genome_subfolders[i] = subfolder
+            ftp.cwd('..')
+            counter += 1
+    #        if counter > 6:  # temporary counter to limit testing time
+    #            break
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
         continue
@@ -200,8 +209,13 @@ for key in genome_subfolders.keys():
                     if not os.path.exists(out + str(key)):
                         print "creating directory: %s" % (out + str(key))
                         os.makedirs(out + str(key))
-                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
-                    print "%s was downloaded to the folder %s at time: %s" % (fil, str(key), datetime.datetime.now())
+                    try:
+                        download(key, fil, out)
+                        print "retrbinary, yay!"
+                    except Exception:
+                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
+                    print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
                     # print something to error file here
@@ -228,3 +242,4 @@ for key in genome_subfolders.keys():
 
 
 print "done"
+ftp.quit()
