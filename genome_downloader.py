@@ -60,8 +60,7 @@ def testifDirectory(ftp, filenames):
 
 def download(folder, filenames, outputfolders):
     local_filename = os.path.join(outputfolders + str(folder), str(filenames))
-    lf = open(local_filename, "wb")
-    print type(ftp)
+    lf = open(str(local_filename), "wb")
     ftp.retrbinary('RETR %s' % filenames, lf.write)
     lf.close()
 
@@ -89,6 +88,7 @@ args = parser.parse_args()
 taxlist = args.taxlistpath.read().splitlines() # this should be a capitalised list of species genus
 out = str(args.output) + "/"
 
+# replies with specified output path, otherwise defaults to cwd
 if out is not None:
     print "output path is: " + out
 else:
@@ -99,6 +99,7 @@ print "Your list: "
 print taxlist
 print "\n"
 
+# Checks for Candidatus genus species in user list
 for name in taxlist:
     if name == "Candidatus":
         prompt = raw_input("Your list contains the name 'Candidatus'. Are you sure you want to download genomes with this genus? y/n")
