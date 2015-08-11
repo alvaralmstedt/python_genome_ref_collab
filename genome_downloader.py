@@ -61,6 +61,7 @@ def testifDirectory(ftp, filenames):
 def download(folder, filenames, outputfolders):
     local_filename = os.path.join(outputfolders + str(folder), str(filenames))
     lf = open(local_filename, "wb")
+    print type(ftp)
     ftp.retrbinary('RETR %s' % filenames, lf.write)
     lf.close()
 
@@ -97,6 +98,16 @@ else:
 print "Your list: "
 print taxlist
 print "\n"
+
+for name in taxlist:
+    if name == "Candidatus":
+        prompt = raw_input("Your list contains the name 'Candidatus'. Are you sure you want to download genomes with this genus? y/n")
+        if prompt == "n" or prompt == "N" or prompt == "no" or prompt == "NO":
+            print "Your response was %s. Skipping 'Candidatus'." % prompt
+            taxlist.remove("Candidatus")
+        else:
+            print "Your response was %s. 'Candidatus' genomes will be downloaded."
+
 ftpurl = args.ftpurl
 ftpurl = str(ftpurl)
 print "Will search from %s" % ftpurl
@@ -115,6 +126,9 @@ if ftpurl is not None:
     elif ftpurl[-9:] == "ia_DRAFT/":
         ftp.cwd("genomes")
         ftp.cwd("Bacteria_DRAFT")
+    elif ftpurl[-9:] == "es/Fungi/":
+        ftp.cwd("genomes")
+        ftp.cwd("Fungi")
     else:
         print "Url mismatch detected, defaulting to searching in /genomes/"
         ftp.cwd("genomes")
