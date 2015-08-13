@@ -119,15 +119,15 @@ ftp.login()
 
 # This will read the input url so that it is able to index and download from different places on the ftp
 if ftpurl is not None:
-    if ftpurl[-9:] == "/genomes/":
+    if ftpurl[-9:] == "/genomes/" or ftpurl[-9:] == "v/genomes":
         ftp.cwd("genomes")
-    elif ftpurl[-9:] == "Bacteria/":
+    elif ftpurl[-9:] == "Bacteria/" or ftpurl[-9:] == "/Bacteria":
         ftp.cwd("genomes")
         ftp.cwd("Bacteria")
-    elif ftpurl[-9:] == "ia_DRAFT/":
+    elif ftpurl[-9:] == "ia_DRAFT/" or ftpurl[-9:] == "ria_DRAFT":
         ftp.cwd("genomes")
         ftp.cwd("Bacteria_DRAFT")
-    elif ftpurl[-9:] == "es/Fungi/":
+    elif ftpurl[-9:] == "es/Fungi/" or ftpurl[-9:] == "mes/Fungi":
         ftp.cwd("genomes")
         ftp.cwd("Fungi")
     else:
