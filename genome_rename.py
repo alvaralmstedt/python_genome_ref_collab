@@ -12,15 +12,17 @@ parser.add_argument("folder", nargs="?", type=str, help='specify folder path, el
 
 args = parser.parse_args()
 
-base_dir = args.folder()
+user_directory = args.folder
 
-for subdir in os.listdir(base_dir):
-    if os.path.isdir(subdir):
-        os.chdir(str(base_dir) + "/" + str(subdir))
+for subdir in os.listdir(user_directory):
+    if os.path.isdir(str(user_directory + "/" + subdir)):
+        os.chdir(str(user_directory) + "/" + str(subdir))
         for filnam in os.listdir("."):
-            os.rename(filnam, subdir + filnam)
-            tarfile.open(subdir + filnam)
-            tarfile.extractall(".")
+            if filnam.endswith(".tgz"):
+            	tfile = tarfile.open(filnam)
+            	tfile.extractall(".")
+	for filnam in os.listdir("."):
+		os.rename(filnam, subdir + filnam)
         os.chdir("..")
     else:
         print "%s is a file, continuing..." % subdir
