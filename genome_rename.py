@@ -13,6 +13,10 @@ parser.add_argument("-z", "--zip", action="store_true", help='specifies zipped f
 args = parser.parse_args()
 
 user_directory = args.folder
+
+if user_directory is None:
+    user_directory = os.getcwd()
+
 zipped = args.zip
 
 if zipped:
