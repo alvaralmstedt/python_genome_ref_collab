@@ -39,13 +39,13 @@ if zipped:
                     print "after concat"
                     if filnam.endswith(".faa"):
                         with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-                            for namn in lista:
-                                with open(str(namn) + ".faa") as infile:
+    #                       for namn in lista:
+                                with open(str(namn)) as infile:
                                     outfile.write(infile.read())
                     elif filnam.endswith(".fna"):
                         with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-                            for namn in lista:
-                                with open(str(namn) + ".fna") as infile:
+    #                        for namn in lista:
+                                with open(str(namn)) as infile:
                                     outfile.write(infile.read())
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
