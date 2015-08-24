@@ -36,20 +36,19 @@ if zipped:
                     tfile.extractall(".")
                     if concat:          # under this should be concatenation code
                         if filnam.endswith(".faa"):
-                            with open('./' + "concat_" + str(filnam), 'w') as outfile:
+                            with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
                                 for fname in os.listdir("./" + str(filnam.endswith(".faa"))):
                                     with open(filnam) as infile:
                                         outfile.write(infile.read())
                         elif filnam.endswith(".fna"):
-                            with open('./' + "concat_" + str(filnam), 'w') as outfile:
+                            with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
                                 for fname in os.listdir("./" + str(filnam.endswith(".fna"))):
                                     with open(filnam) as infile:
                                         outfile.write(infile.read())
 
-        for filnam in os.listdir("."):
-            os.rename(filnam, subdir + filnam)
-
-            os.chdir("..")
+            for filnam in os.listdir("."):
+                os.rename(filnam, subdir + filnam)
+                os.chdir("..")
         else:
             print "%s is a file, continuing..." % subdir
 else:
