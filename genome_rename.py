@@ -40,12 +40,12 @@ if zipped:
                     if filnam.endswith(".faa"):
                         with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
     #                       for namn in lista:
-                                with open(str(namn)) as infile:
+                                with open(str(filnam)) as infile:
                                     outfile.write(infile.read())
                     elif filnam.endswith(".fna"):
                         with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
     #                        for namn in lista:
-                                with open(str(namn)) as infile:
+                                with open(str(filnam)) as infile:
                                     outfile.write(infile.read())
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
