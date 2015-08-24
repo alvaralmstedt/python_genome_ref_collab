@@ -4,7 +4,6 @@
 
 import argparse
 import os
-import re
 import urllib
 import ftplib
 import datetime
@@ -16,7 +15,7 @@ directories = []
 class TimeoutException(Exception):  # Custom exception class
     pass
 
-
+# Handles timeouts (skips if things take too long)
 def timeout_handler(signum, frame):  # Custom signal handler
     raise TimeoutException
 
@@ -25,6 +24,7 @@ def timeout_handler(signum, frame):  # Custom signal handler
 signal.signal(signal.SIGALRM, timeout_handler)
 
 
+# tries to go into every directory to check if it is a directory. This can take a while.
 def testifDirectory(ftp, filenames):
     # put whatever you want to do in each directory here
     # when you have called testifDirectory with a file,
@@ -57,7 +57,8 @@ def testifDirectory(ftp, filenames):
             # put whatever you want to do after processing the files
             # and sub-directories of a directory here
 
-
+# Tries to download files via the ftplib module
+# This still doesn't work for whatever reason. urllib is used as a backup which works.
 def download(folder, filenames, outputfolders):
     local_filename = os.path.join(outputfolders + str(folder), str(filenames))
     lf = open(str(local_filename), "wb")
@@ -103,7 +104,7 @@ print "\n"
 for name in taxlist:
     if name == "Candidatus":
         prompt = raw_input("Your list contains the name 'Candidatus'. Are you sure you want to download genomes with this genus? y/n")
-        if prompt == "n" or prompt == "N" or prompt == "no" or prompt == "NO":
+        if prompt == "n" or prompt == "N" or prompt == "no" or prompt == "NO" or prompt == "No":
             print "Your response was %s. Skipping 'Candidatus'." % prompt
             taxlist.remove("Candidatus")
         else:
@@ -158,7 +159,7 @@ ftpdir = ftp.retrlines('NLST', files.append)
 # print ftpdir
 print "before for-loop"
 
-# First try on directory checking, is a lot faster than the current one but works really poorly:
+# First try on directory checking, is a lot faster than the current one but works really poorly due to list format:
 #
 # for r in files:
 #    print "alvar " + r + "\n"

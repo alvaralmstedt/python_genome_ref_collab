@@ -1,5 +1,10 @@
 #!/bin/python
 
+# To be run in the folder where other folders containing genomes that are downloaded from the NCBI ftp
+# Run without the -z flag for just renaming files or with the -z flag to gunzip/guntar and then rename
+# The files will be renamed to the folder name it is in and original filename following.
+# After running this you can simply do for example cp */*.faa /faafolder to copy the .faa files.
+
 import os
 import argparse
 import tarfile
@@ -9,6 +14,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("folder", nargs="?", type=str, help='specify folder path, else cwd')
 parser.add_argument("-z", "--zip", action="store_true", help='specifies zipped files')
+parser.add_argument("-c", "--concat", action="store_true", help="concatenates contigs split into several .faa files")
 
 args = parser.parse_args()
 
@@ -17,6 +23,7 @@ user_directory = args.folder
 if user_directory is None:
     user_directory = os.getcwd()
 
+concat = args.concat
 zipped = args.zip
 
 if zipped:
@@ -27,8 +34,16 @@ if zipped:
                 if filnam.endswith(".tgz"):
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
+                    if concat:          # under this should be concatenation code
+                        if filnam.endswith(".faa"):
+                            with open('./' + "concat_" + str(filnam), 'w') as outfile:
+                                for fname in os.listdir("./" + str(filnam.endswith(".faa"))):
+                                    with open(filnam) as infile:
+                                        outfile.write(infile.read())
+
         for filnam in os.listdir("."):
             os.rename(filnam, subdir + filnam)
+
             os.chdir("..")
         else:
             print "%s is a file, continuing..." % subdir
