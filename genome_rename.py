@@ -50,7 +50,7 @@ if zipped:
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
                 print "%s is being renamed to %s" % (filnam, subdir + filnam)
-                if not os.path.isfile(str(subdir + filnam)):
+                if not os.path.isfile(str(subdir + filnam)) or not filnam.startswith("concat_"):
                     os.rename(filnam, subdir + filnam)
             os.chdir("..")
         else:
