@@ -35,7 +35,9 @@ if zipped:
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
                     if concat:          # under this should be concatenation code
+                        print "after concat"
                         if filnam.endswith(".faa") in os.listdir("."):
+
                             with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
                                 for fname in os.listdir("./" + str(filnam.endswith(".faa"))):
                                     with open(filnam) as infile:
