@@ -37,14 +37,15 @@ if zipped:
                 if concat:          # under this should be concatenation code
                     lista = os.listdir(".")
                     print "after concat"
-                    for namn in lista:
-                        if namn.endswith(".faa"):
-                            with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-                                with open(namn) as infile:
+                    if filnam.endswith(".faa"):
+                        with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
+                            for namn in lista:
+                                with open(str(namn) + ".faa") as infile:
                                     outfile.write(infile.read())
-                        elif namn.endswith(".fna"):
-                            with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-                                with open(namn) as infile:
+                    elif filnam.endswith(".fna"):
+                        with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
+                            for namn in lista:
+                                with open(str(namn) + ".fna") as infile:
                                     outfile.write(infile.read())
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
