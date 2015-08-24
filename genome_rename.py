@@ -49,7 +49,7 @@ if zipped:
             for filnam in os.listdir("."):
                 print "%s is being renamed to %s" % (filnam, subdir + filnam)
                 os.rename(filnam, subdir + filnam)
-                os.chdir("..")
+            os.chdir("..")
         else:
             print "%s is a file, continuing..." % subdir
 else:
