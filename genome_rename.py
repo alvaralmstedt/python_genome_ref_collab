@@ -45,7 +45,7 @@ if zipped:
                                 for fname in os.listdir("./" + str(filnam.endswith(".fna"))):
                                     with open(filnam) as infile:
                                         outfile.write(infile.read())
-
+            os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
                 os.rename(filnam, subdir + filnam)
                 os.chdir("..")
