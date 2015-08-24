@@ -35,7 +35,7 @@ if zipped:
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
                     if concat:          # under this should be concatenation code
-                        if filnam.endswith(".faa"):
+                        if filnam.endswith(".faa") in os.listdir("."):
                             with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
                                 for fname in os.listdir("./" + str(filnam.endswith(".faa"))):
                                     with open(filnam) as infile:
@@ -48,7 +48,8 @@ if zipped:
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
                 print "%s is being renamed to %s" % (filnam, subdir + filnam)
-                os.rename(filnam, subdir + filnam)
+                if not os.path.isfile(str(subdir + filnam)):
+                    os.rename(filnam, subdir + filnam)
             os.chdir("..")
         else:
             print "%s is a file, continuing..." % subdir

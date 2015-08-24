@@ -87,7 +87,11 @@ args = parser.parse_args()
 
 # makes a the text list into a python list
 taxlist = args.taxlistpath.read().splitlines() # this should be a capitalised list of species genus
-out = str(args.output) + "/"
+
+if str(args.output).endswith("/"):
+    out = str(args.output)
+else:
+    out = str(args.output) + "/"
 
 # replies with specified output path, otherwise defaults to cwd
 if out is not None:
@@ -103,7 +107,7 @@ print "\n"
 # Checks for Candidatus genus species in user list
 for name in taxlist:
     if name == "Candidatus":
-        prompt = raw_input("Your list contains the name 'Candidatus'. Are you sure you want to download genomes with this genus? y/n")
+        prompt = raw_input("Your list contains the name 'Candidatus'. Are you sure you want to download genomes with this genus? y/n: ")
         if prompt == "n" or prompt == "N" or prompt == "no" or prompt == "NO" or prompt == "No":
             print "Your response was %s. Skipping 'Candidatus'." % prompt
             taxlist.remove("Candidatus")
