@@ -47,7 +47,7 @@ if zipped:
                                         outfile.write(infile.read())
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
-                print "%s is being renamed to %s" % filnam, subdir + filnam
+                print "%s is being renamed to %s" % (filnam, subdir + filnam)
                 os.rename(filnam, subdir + filnam)
                 os.chdir("..")
         else:
