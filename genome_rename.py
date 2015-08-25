@@ -10,6 +10,18 @@ import argparse
 import tarfile
 import datetime
 
+
+def concatenate(f_end, folder, namae):
+    lista = os.listdir(".")
+    print "inside concat"
+    if filnam.endswith(str(f_end)):
+        print ".faa"
+        with open('./' + "concat_" + str(folder) + str(namae), 'w') as outfile:
+            for i in lista:
+                with open(str(i)) as infile:
+                    for line in infile:
+                        outfile.write(line)
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("folder", nargs="?", type=str, help='specify folder path, else cwd')
@@ -35,18 +47,15 @@ if zipped:
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
                 if concat:          # under this should be concatenation code
-                    lista = os.listdir(".")
-                    print "after concat"
-                    if filnam.endswith(".faa"):
-                        with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-    #                       for namn in lista:
-                                with open(str(filnam)) as infile:
-                                    outfile.write(infile.read())
-                    elif filnam.endswith(".fna"):
-                        with open('./' + "concat_" + str(subdir) + str(filnam), 'w') as outfile:
-    #                        for namn in lista:
-                                with open(str(filnam)) as infile:
-                                    outfile.write(infile.read())
+    #                lista = os.listdir(".")
+    #                print "after concat"
+                    try:
+                        if filnam.endswith(".faa"):
+                            concatenate(".faa", subdir, filnam)
+                        elif filnam.endswith(".fna"):
+                            concatenate(".fna", subdir, filnam)
+                    except:
+                        print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
                 print "%s is being renamed to %s" % (filnam, subdir + filnam)
