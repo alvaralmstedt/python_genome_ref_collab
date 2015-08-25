@@ -16,7 +16,7 @@ def concatenate(f_end, folder, namae):
     print "inside concatenate"
     if namae.endswith(str(f_end)):
         print str(f_end)
-        with open("concat_" + str(folder) + str(f_end), 'w') as outfile:
+        with open("concat_" + str(folder) + str(f_end), 'a') as outfile:
             for i in lista:
                 print "before if %s" % i
                 if i.endswith(str(f_end)) and not i.startswith("concat_"):
