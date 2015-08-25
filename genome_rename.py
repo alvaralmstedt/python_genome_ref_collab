@@ -50,12 +50,8 @@ if zipped:
 #                    lista = os.listdir(".")
                     print "inside concat"
                     try:
-                        if filnam.endswith(".faa"):
-                            concatenate(".faa", subdir, filnam)
-                        elif filnam.endswith(".fna"):
-                            concatenate(".fna", subdir, filnam)
-                        else:
-                            print "endswith didn't work"
+                        concatenate(".faa", subdir, filnam)
+                        concatenate(".fna", subdir, filnam)
                     except:
                         print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
