@@ -22,6 +22,7 @@ def concatenate(f_end, folder, namae):
                     with open(str(i)) as infile:
                         for line in infile.readlines():
                             outfile.write(line)
+                            print line
                     print "%s was written" % outfile
 
 parser = argparse.ArgumentParser()
