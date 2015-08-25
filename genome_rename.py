@@ -20,7 +20,7 @@ def concatenate(f_end, folder, namae):
             for i in folder:
                 if i.endswith(str(f_end)) and not i.startswith("concat_"):
                     with open(str(i)) as infile:
-                        for line in infile:
+                        for line in infile.readlines():
                             outfile.write(line)
                     print "%s was written" % outfile
 
