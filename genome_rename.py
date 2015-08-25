@@ -52,15 +52,15 @@ if zipped:
                 if filnam.endswith(".tgz"):
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
-            for filnam in os.listdir("."):
-                if concat:          # under this should be concatenation code
+            filnamn = os.listdir(".")
+            if concat:          # under this should be concatenation code
 #                    lista = os.listdir(".")
-                    print "inside concat"
-                    try:
-                        concatenate(".faa", subdir, filnam)
-                        concatenate(".fna", subdir, filnam)
-                    except:
-                        print "file ending not detected. Sorry!"
+                print "inside concat"
+                try:
+                    concatenate(".faa", subdir, filnamn)
+                    concatenate(".fna", subdir, filnamn)
+                except:
+                    print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
 #                print "%s is being renamed to %s" % (filnam, subdir + filnam)
