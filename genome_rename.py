@@ -48,7 +48,7 @@ if zipped:
                     tfile.extractall(".")
                 if concat:          # under this should be concatenation code
 #                    lista = os.listdir(".")
-#                    print "after concat"
+                    print "inside concat"
                     try:
                         if filnam.endswith(".faa"):
                             concatenate(".faa", subdir, filnam)
