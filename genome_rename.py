@@ -18,9 +18,10 @@ def concatenate(f_end, folder, namae):
         print str(f_end)
         with open("concat_" + str(folder) + str(namae), 'w') as outfile:
             for i in lista:
-                with open(str(i)) as infile:
-                    for line in infile:
-                        outfile.write(line)
+                if i.endswith(str(f_end)):
+                    with open(str(i)) as infile:
+                        for line in infile:
+                            outfile.write(line)
 
 parser = argparse.ArgumentParser()
 
