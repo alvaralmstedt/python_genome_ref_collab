@@ -22,6 +22,7 @@ def concatenate(f_end, folder, namae):
                     with open(str(i)) as infile:
                         for line in infile:
                             outfile.write(line)
+                    print "%s was written" % outfile
 
 parser = argparse.ArgumentParser()
 
@@ -59,7 +60,7 @@ if zipped:
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
 #                print "%s is being renamed to %s" % (filnam, subdir + filnam)
-                if not os.path.isfile(str(subdir + filnam)) or not filnam.startswith("concat_"):
+                if not os.path.isfile(str(subdir + filnam)) and not filnam.startswith("concat_"):
                     os.rename(filnam, subdir + filnam)
             os.chdir("..")
         else:
