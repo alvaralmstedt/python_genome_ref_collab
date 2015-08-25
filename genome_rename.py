@@ -17,8 +17,8 @@ def concatenate(f_end, folder, namae):
     if namae.endswith(str(f_end)):
         print str(f_end)
         with open("concat_" + str(folder) + str(namae), 'w') as outfile:
-            for i in lista:
-                if i.endswith(str(f_end)):
+            for i in folder:
+                if i.endswith(str(f_end)) and not i.startswith("concat_"):
                     with open(str(i)) as infile:
                         for line in infile:
                             outfile.write(line)
