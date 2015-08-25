@@ -13,10 +13,10 @@ import datetime
 
 def concatenate(f_end, folder, namae):
     lista = os.listdir(".")
-    print "inside concat"
+    print "inside concatenate"
     if filnam.endswith(str(f_end)):
-        print ".faa"
-        with open('./' + "concat_" + str(folder) + str(namae), 'w') as outfile:
+        print str(f_end)
+        with open("concat_" + str(folder) + str(namae), 'w') as outfile:
             for i in lista:
                 with open(str(i)) as infile:
                     for line in infile:
@@ -47,8 +47,8 @@ if zipped:
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
                 if concat:          # under this should be concatenation code
-    #                lista = os.listdir(".")
-    #                print "after concat"
+#                    lista = os.listdir(".")
+#                    print "after concat"
                     try:
                         if filnam.endswith(".faa"):
                             concatenate(".faa", subdir, filnam)
@@ -58,7 +58,7 @@ if zipped:
                         print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
-                print "%s is being renamed to %s" % (filnam, subdir + filnam)
+#                print "%s is being renamed to %s" % (filnam, subdir + filnam)
                 if not os.path.isfile(str(subdir + filnam)) or not filnam.startswith("concat_"):
                     os.rename(filnam, subdir + filnam)
             os.chdir("..")
