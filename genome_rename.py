@@ -17,7 +17,7 @@ def concatenate(f_end, folder, namae):
     if namae.endswith(str(f_end)):
         print str(f_end)
         with open("concat_" + str(folder) + str(namae), 'w') as outfile:
-            for i in folder:
+            for i in lista:
                 print "before if %s" % i
                 if i.endswith(str(f_end)) and not i.startswith("concat_"):
                     print "line 23"
