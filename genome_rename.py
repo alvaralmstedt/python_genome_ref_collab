@@ -14,7 +14,7 @@ import datetime
 def concatenate(f_end, folder, namae):
     lista = os.listdir(".")
     print "inside concatenate"
-    if filnam.endswith(str(f_end)):
+    if namae.endswith(str(f_end)):
         print str(f_end)
         with open("concat_" + str(folder) + str(namae), 'w') as outfile:
             for i in lista:
@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("folder", nargs="?", type=str, help='specify folder path, else cwd')
 parser.add_argument("-z", "--zip", action="store_true", help='specifies zipped files')
-parser.add_argument("-c", "--concat", action="store_true", help="concatenates contigs split into several .faa files")
+parser.add_argument("-c", "--concat", action="store_true", help="concatenates contigs split into several .faa/.fna files.")
 
 args = parser.parse_args()
 
@@ -46,6 +46,7 @@ if zipped:
                 if filnam.endswith(".tgz"):
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
+            for filnam in os.listdir("."):
                 if concat:          # under this should be concatenation code
 #                    lista = os.listdir(".")
                     print "inside concat"
