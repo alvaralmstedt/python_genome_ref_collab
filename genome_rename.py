@@ -54,6 +54,8 @@ if zipped:
                             concatenate(".faa", subdir, filnam)
                         elif filnam.endswith(".fna"):
                             concatenate(".fna", subdir, filnam)
+                        else:
+                            print "endswith didn't work"
                     except:
                         print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
