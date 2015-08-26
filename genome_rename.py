@@ -13,21 +13,24 @@ import datetime
 
 def concatenate(f_end, folder, namae):
 #    lista = os.listdir(".")
-    print "inside concatenate"
+#    print "inside concatenate"
     if namae.endswith(str(f_end)):
         print str(f_end)
         with open("concat_" + str(folder) + str(f_end), 'a') as outfile:
 #            for i in lista:
             print "before if %s" % namae
+            completed = False
             if namae.endswith(str(f_end)) and not namae.startswith("concat_"):
-                print "line 23"
+#                print "line 23"
                 with open(namae) as infile:
-                    print "line 25, opened"
+#                    print "line 25, opened"
                     for line in infile.readlines():
                         outfile.write(line)
 #                          print line
                     print "%s was written" % outfile
-
+                    completed = True
+            if completed:
+                os.remove(str(namae))
 parser = argparse.ArgumentParser()
 
 parser.add_argument("folder", nargs="?", type=str, help='specify folder path, else cwd')
@@ -55,7 +58,7 @@ if zipped:
             for filnam in os.listdir("."):
                 if concat:          # under this should be concatenation code
 #                    lista = os.listdir(".")
-                    print "inside concat"
+#                    print "inside concat"
                     try:
                         concatenate(".faa", subdir, filnam)
                         concatenate(".fna", subdir, filnam)
