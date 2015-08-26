@@ -70,6 +70,8 @@ if zipped:
                         concatenate(".gff", subdir, filnam)
                         concatenate(".val", subdir, filnam)
                         concatenate(".ptt", subdir, filnam)
+                        concatenate(".frn", subdir, filnam)
+                        concatenate(".rnt", subdir, filnam)
                     except:
                         print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
