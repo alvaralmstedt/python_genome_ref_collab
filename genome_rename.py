@@ -52,13 +52,13 @@ if zipped:
                 if filnam.endswith(".tgz"):
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
-            filnamn = os.listdir(".")
+#            for filnam in os.listdir("."):
             if concat:          # under this should be concatenation code
-#                    lista = os.listdir(".")
+                lista = os.listdir(".")
                 print "inside concat"
                 try:
-                    concatenate(".faa", subdir, filnamn)
-                    concatenate(".fna", subdir, filnamn)
+                    concatenate(".faa", subdir, lista)
+                    concatenate(".fna", subdir, lista)
                 except:
                     print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
