@@ -62,6 +62,14 @@ if zipped:
                     try:
                         concatenate(".faa", subdir, filnam)
                         concatenate(".fna", subdir, filnam)
+                        concatenate(".gbk", subdir, filnam)
+                        concatenate(".ffn", subdir, filnam)
+                        concatenate(".asn", subdir, filnam)
+                        concatenate(".rpt", subdir, filnam)
+                        concatenate(".gbs", subdir, filnam)
+                        concatenate(".gff", subdir, filnam)
+                        concatenate(".val", subdir, filnam)
+                        concatenate(".ptt", subdir, filnam)
                     except:
                         print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
