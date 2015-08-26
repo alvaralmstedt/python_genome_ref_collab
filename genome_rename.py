@@ -12,20 +12,20 @@ import datetime
 
 
 def concatenate(f_end, folder, namae):
-    lista = os.listdir(".")
+#    lista = os.listdir(".")
     print "inside concatenate"
     if namae.endswith(str(f_end)):
         print str(f_end)
         with open("concat_" + str(folder) + str(f_end), 'a') as outfile:
-            for i in lista:
-                print "before if %s" % i
-                if i.endswith(str(f_end)) and not i.startswith("concat_"):
-                    print "line 23"
-                    with open(i) as infile:
-                        print "line 25, opened"
-                        for line in infile.readlines():
-                            outfile.write(line)
- #                          print line
+#            for i in lista:
+            print "before if %s" % i
+            if i.endswith(str(f_end)) and not i.startswith("concat_"):
+                print "line 23"
+                with open(i) as infile:
+                    print "line 25, opened"
+                    for line in infile.readlines():
+                        outfile.write(line)
+#                          print line
                     print "%s was written" % outfile
 
 parser = argparse.ArgumentParser()
@@ -52,15 +52,15 @@ if zipped:
                 if filnam.endswith(".tgz"):
                     tfile = tarfile.open(filnam)
                     tfile.extractall(".")
-#            for filnam in os.listdir("."):
-            if concat:          # under this should be concatenation code
-                lista = os.listdir(".")
-                print "inside concat"
-                try:
-                    concatenate(".faa", subdir, lista)
-                    concatenate(".fna", subdir, lista)
-                except:
-                    print "file ending not detected. Sorry!"
+            for filnam in os.listdir("."):
+                if concat:          # under this should be concatenation code
+#                    lista = os.listdir(".")
+                    print "inside concat"
+                    try:
+                        concatenate(".faa", subdir, filnam)
+                        concatenate(".fna", subdir, filnam)
+                    except:
+                        print "file ending not detected. Sorry!"
             os.chdir(str(user_directory) + "/" + str(subdir))
             for filnam in os.listdir("."):
 #                print "%s is being renamed to %s" % (filnam, subdir + filnam)
