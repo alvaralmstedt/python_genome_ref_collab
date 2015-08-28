@@ -199,8 +199,8 @@ for i in directories:
     else:
         # Resets alarm
         signal.alarm(0)
-print "printing genome_subfolders"
-print genome_subfolders
+# print "printing genome_subfolders"
+# print genome_subfolders
 # print directories
 
 print "starting search"
