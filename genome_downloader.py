@@ -1,4 +1,4 @@
-#!/usr/local/opt/bin
+#!/usr/local/opt/bin python
 
 # Written by: Alvar Almstedt
 
