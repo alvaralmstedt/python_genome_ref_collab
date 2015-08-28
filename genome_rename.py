@@ -1,4 +1,4 @@
-#!usr/local/opt/bin python2.7
+#!/usr/local/opt/bin python2.7
 
 # To be run in the folder where other folders containing genomes that are downloaded from the NCBI ftp
 # Run without the -z flag for just renaming files or with the -z flag to gunzip/guntar and then rename
