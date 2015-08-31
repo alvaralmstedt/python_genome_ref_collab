@@ -70,7 +70,7 @@ def indexer(dirs, counter=0):
 #                ftp.cwd('..')
             counter += 1
             if counter > 6:  # temporary counter to limit testing time
-                break
+#                break
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
         continue
