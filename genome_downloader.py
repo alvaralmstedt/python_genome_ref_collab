@@ -73,7 +73,7 @@ def indexer(dirs, counter=0):
 #                break
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
-        continue
+#        continue
     else:
         # Resets alarm
         signal.alarm(0)
