@@ -263,4 +263,4 @@ for key in genome_subfolders.keys():
 
 
 print "done"
-ftp.quit()
+# ftp.quit()
