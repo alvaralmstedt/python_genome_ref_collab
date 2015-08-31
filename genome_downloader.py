@@ -28,7 +28,7 @@ def testifDirectory(ftp, filenames):
     # put whatever you want to do in each directory here
     # when you have called testifDirectory with a file,
     # the command above will fail and you will return
-
+    files.sort()
 
 
     # get the files and directories contained in the current directory
@@ -59,24 +59,24 @@ def testifDirectory(ftp, filenames):
 
 
 def indexer(dirs, counter=0):
-    for i in dirs:
-        signal.alarm(30)
-        try:
-            if i != "CLUSTERS":
-                ftp.cwd(i)
-                subfolder = ftp.nlst()
-                print "indexing %s at time: %s" % (i, datetime.datetime.now())
-                genome_subfolders[i] = subfolder
-                ftp.cwd('..')
-                counter += 1
-                if counter > 6:  # temporary counter to limit testing time
-                    break
-        except TimeoutException:
-            print "Timed out after 30 seconds, continuing"
-            continue
-        else:
-            # Resets alarm
-            signal.alarm(0)
+#    for i in dirs:
+    signal.alarm(30)
+    try:
+        if dirs != "CLUSTERS":
+#                ftp.cwd(i)
+            subfolder = ftp.nlst()
+            print "indexing %s at time: %s" % (i, datetime.datetime.now())
+            genome_subfolders[i] = subfolder
+#                ftp.cwd('..')
+            counter += 1
+            if counter > 6:  # temporary counter to limit testing time
+                break
+    except TimeoutException:
+        print "Timed out after 30 seconds, continuing"
+        continue
+    else:
+        # Resets alarm
+        signal.alarm(0)
 
 
 
@@ -185,7 +185,7 @@ ftpdir = ftp.retrlines('NLST', files.append)
 # ftpdir = ftpdir.splitlines()
 
 # print ftpdir
-print "before for-loop"
+# print "before for-loop"
 
 # First try on directory checking, is a lot faster than the current one but works really poorly due to list format:
 #
@@ -197,7 +197,7 @@ print "before for-loop"
 #            stripped = r[56:].strip()
 #            directories.append(stripped)
 
-files.sort()
+
 testifDirectory(ftp, files)
 
 # print directories.sort()
