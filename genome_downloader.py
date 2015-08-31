@@ -11,7 +11,6 @@ import signal
 
 directories = []
 
-
 class TimeoutException(Exception):  # Custom exception class
     pass
 
@@ -42,6 +41,7 @@ def testifDirectory(ftp, filenames):
                 ftp.cwd(name)
                 directories.append(name)
                 print name
+                indexer(name)
                 if name == "CLUSTERS":
                     ftp.cwd("/genomes/Bacteria")
                 else:
@@ -56,6 +56,29 @@ def testifDirectory(ftp, filenames):
             signal.alarm(0)  # resets alarm
             # put whatever you want to do after processing the files
             # and sub-directories of a directory here
+
+
+def indexer(dirs, counter=0):
+    for i in dirs:
+        signal.alarm(30)
+        try:
+            if i != "CLUSTERS":
+#                ftp.cwd(i)
+                subfolder = ftp.nlst()
+                print "indexing %s at time: %s" % (i, datetime.datetime.now())
+                genome_subfolders[i] = subfolder
+#                ftp.cwd('..')
+                counter += 1
+                if counter > 6:  # temporary counter to limit testing time
+                    break
+        except TimeoutException:
+            print "Timed out after 30 seconds, continuing"
+            continue
+        else:
+            # Resets alarm
+            signal.alarm(0)
+
+
 
 # Tries to download files via the ftplib module
 # This still doesn't work for whatever reason. urllib is used as a backup which works.
@@ -154,7 +177,7 @@ else:
 print "\n"
 
 ftp.set_debuglevel(0)
-counter = 0
+
 
 files = []
 
@@ -182,24 +205,7 @@ testifDirectory(ftp, files)
 # this dict will contain all directories in genomes as keys and lists of their contents as values
 genome_subfolders = {}
 
-for i in directories:
-    signal.alarm(30)
-    try:
-        if i != "CLUSTERS":
-            ftp.cwd(i)
-            subfolder = ftp.nlst()
-            print "indexing %s at time: %s" % (i, datetime.datetime.now())
-            genome_subfolders[i] = subfolder
-            ftp.cwd('..')
-            counter += 1
-    #        if counter > 6:  # temporary counter to limit testing time
-    #            break
-    except TimeoutException:
-        print "Timed out after 30 seconds, continuing"
-        continue
-    else:
-        # Resets alarm
-        signal.alarm(0)
+
 # print "printing genome_subfolders"
 # print genome_subfolders
 # print directories
