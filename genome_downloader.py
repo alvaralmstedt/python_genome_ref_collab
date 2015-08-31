@@ -177,7 +177,7 @@ print "before for-loop"
 files.sort()
 testifDirectory(ftp, files)
 
-print directories.sort()
+# print directories.sort()
 
 # this dict will contain all directories in genomes as keys and lists of their contents as values
 genome_subfolders = {}
