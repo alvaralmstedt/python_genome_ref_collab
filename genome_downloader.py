@@ -65,7 +65,7 @@ def indexer(dirs, counter=0):
         if dirs != "CLUSTERS":
 #                ftp.cwd(i)
             subfolder = ftp.nlst()
-            print "indexing %s at time: %s" % (i, datetime.datetime.now())
+            print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[i] = subfolder
 #                ftp.cwd('..')
             counter += 1
