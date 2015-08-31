@@ -197,14 +197,12 @@ ftpdir = ftp.retrlines('NLST', files.append)
 #            stripped = r[56:].strip()
 #            directories.append(stripped)
 
-
+genome_subfolders = {}
 testifDirectory(ftp, files)
 
 # print directories.sort()
 
 # this dict will contain all directories in genomes as keys and lists of their contents as values
-genome_subfolders = {}
-
 
 # print "printing genome_subfolders"
 # print genome_subfolders
