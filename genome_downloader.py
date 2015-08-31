@@ -66,7 +66,7 @@ def indexer(dirs, counter=0):
 #                ftp.cwd(i)
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
-            genome_subfolders[i] = subfolder
+            genome_subfolders[dirs] = subfolder
 #                ftp.cwd('..')
             counter += 1
 #            if counter > 6:  # temporary counter to limit testing time
