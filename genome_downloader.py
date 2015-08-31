@@ -59,11 +59,12 @@ def testifDirectory(ftp, filenames):
 
 # Tries to download files via the ftplib module
 # This still doesn't work for whatever reason. urllib is used as a backup which works.
-def download(folder, filenames, outputfolders):
-    local_filename = os.path.join(outputfolders + str(folder), str(filenames))
-    lf = open(str(local_filename), "wb")
-    ftp.retrbinary('RETR %s' % filenames, lf.write)
-    lf.close()
+
+#def download(folder, filenames, outputfolders):
+#    local_filename = os.path.join(outputfolders + str(folder), str(filenames))
+#    lf = open(str(local_filename), "wb")
+#    ftp.retrbinary('RETR %s' % filenames, lf.write)
+#    lf.close()
 
 # assigns argument variable
 parser = argparse.ArgumentParser()
@@ -229,12 +230,12 @@ for key in genome_subfolders.keys():
                     if not os.path.exists(out + str(key)):
                         print "creating directory: %s" % (out + str(key))
                         os.makedirs(out + str(key))
-                    try:
-                        download(key, fil, out)
-                        print "retrbinary, yay!"
-                    except Exception:
-                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
-                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
+#                    try:
+#                        download(key, fil, out)
+#                        print "retrbinary, yay!"
+#                    except Exception:
+                    print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                     print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
