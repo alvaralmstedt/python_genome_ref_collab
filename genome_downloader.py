@@ -63,11 +63,11 @@ def indexer(dirs, counter=0):
         signal.alarm(30)
         try:
             if i != "CLUSTERS":
-#                ftp.cwd(i)
+                ftp.cwd(i)
                 subfolder = ftp.nlst()
                 print "indexing %s at time: %s" % (i, datetime.datetime.now())
                 genome_subfolders[i] = subfolder
-#                ftp.cwd('..')
+                ftp.cwd('..')
                 counter += 1
                 if counter > 6:  # temporary counter to limit testing time
                     break
