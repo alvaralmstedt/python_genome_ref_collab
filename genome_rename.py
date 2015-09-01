@@ -10,6 +10,10 @@ import argparse
 import tarfile
 import datetime
 
+# This function concatenates all files with the same file ending.
+# Note that this happens after untar/gunzip of files meaning that files with the same
+# file ending present before untar/gunzip wil be concatenated in too.
+
 
 def concatenate(f_end, folder, namae):
     if namae.endswith(str(f_end)):
@@ -41,6 +45,7 @@ if user_directory is None:
 concat = args.concat
 zipped = args.zip
 
+# Main statement
 
 if zipped:
     for subdir in os.listdir(user_directory):

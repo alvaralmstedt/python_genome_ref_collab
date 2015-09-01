@@ -8,6 +8,7 @@ import urllib
 import ftplib
 import datetime
 import signal
+import tarfile
 
 directories = []
 
@@ -22,18 +23,87 @@ def timeout_handler(signum, frame):  # Custom signal handler
 # Changes the behavior of the SIGLARM
 signal.signal(signal.SIGALRM, timeout_handler)
 
+def concatenate(f_end, folder, namae):
+    if namae.endswith(str(f_end)):
+        print str(f_end)
+        with open(str(folder) + ".concat" + str(f_end), 'a') as outfile:
+            print "before if %s" % namae
+            completed = False
+            if namae.endswith(str(f_end)) and ".concat." not in namae:
+                with open(namae) as infile:
+                    for line in infile.readlines():
+                        outfile.write(line)
+                    print "%s was written" % outfile
+                    completed = True
+            if completed:
+                os.remove(str(namae))
 
-# tries to go into every directory to check if it is a directory. This can take a while.
+
+def renamer(user_directory):
+    if zipped:
+        for subdir in os.listdir(user_directory):
+            if os.path.isdir(str(user_directory + "/" + subdir)):
+                os.chdir(str(user_directory) + "/" + str(subdir))
+                for filnam in os.listdir("."):
+                    if filnam.endswith(".tgz"):
+                        tfile = tarfile.open(filnam)
+                        tfile.extractall(".")
+                if concat:      # under this should be concatenation code
+                    for filnam in os.listdir("."):      # if & for here switched place. change back if broken
+                        try:
+                            concatenate(".faa", subdir, filnam)
+                            concatenate(".fna", subdir, filnam)
+                            concatenate(".gbk", subdir, filnam)
+                            concatenate(".ffn", subdir, filnam)
+                            concatenate(".asn", subdir, filnam)
+                            concatenate(".rpt", subdir, filnam)
+                            concatenate(".gbs", subdir, filnam)
+                            concatenate(".gff", subdir, filnam)
+                            concatenate(".val", subdir, filnam)
+                            concatenate(".ptt", subdir, filnam)
+                            concatenate(".frn", subdir, filnam)
+                            concatenate(".rnt", subdir, filnam)
+                        except:
+                            print "file ending not detected. Sorry!"
+                os.chdir(str(user_directory) + "/" + str(subdir))
+                for filnam in os.listdir("."):
+                    if not os.path.isfile(str(subdir + filnam)) and ".concat." not in filnam:
+                        os.rename(filnam, subdir + filnam)
+                os.chdir("..")
+            else:
+                print "%s is a file, continuing..." % subdir
+    else:
+        for subdir in os.listdir(user_directory):
+            if os.path.isdir(str(user_directory + "/" + subdir)):
+                os.chdir(str(user_directory) + "/" + str(subdir))
+                for filnam in os.listdir("."):
+                    if not filnam.endswith(".tgz"):
+                        os.rename(filnam, subdir + filnam)
+                if concat:
+                    for filnam in os.listdir("."):
+                        try:
+                            concatenate(".faa", subdir, filnam)
+                            concatenate(".fna", subdir, filnam)
+                            concatenate(".gbk", subdir, filnam)
+                            concatenate(".ffn", subdir, filnam)
+                            concatenate(".asn", subdir, filnam)
+                            concatenate(".rpt", subdir, filnam)
+                            concatenate(".gbs", subdir, filnam)
+                            concatenate(".gff", subdir, filnam)
+                            concatenate(".val", subdir, filnam)
+                            concatenate(".ptt", subdir, filnam)
+                            concatenate(".frn", subdir, filnam)
+                            concatenate(".rnt", subdir, filnam)
+                        except:
+                            print "File ending not detected. Concatenation aborted. Sorry!"
+    print "done at %s" % datetime.datetime.now()
+
+
+
+# tries to go into every directory to check if it is a directory. This can take a little while.
 def testifDirectory(ftp, filenames):
-    # put whatever you want to do in each directory here
-    # when you have called testifDirectory with a file,
-    # the command above will fail and you will return
     files.sort()
-
-
     # get the files and directories contained in the current directory
-    #    filenames = []
-    #    ftp.retrlines('NLST',filenames.append)
     for name in filenames:
         signal.alarm(10)  # alarm is rung after 10 seconds
         try:
@@ -54,26 +124,19 @@ def testifDirectory(ftp, filenames):
             continue
         else:
             signal.alarm(0)  # resets alarm
-            # put whatever you want to do after processing the files
-            # and sub-directories of a directory here
 
 
-def indexer(dirs, counter=0):
-#    for i in dirs:
+# This function indexes the contents of each Specie-folder to the genome_subfolder dict
+def indexer(dirs):
     signal.alarm(30)
     try:
         if dirs != "CLUSTERS":
-#                ftp.cwd(i)
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
-#                ftp.cwd('..')
-            counter += 1
-#            if counter > 6:  # temporary counter to limit testing time
-#                break
+#            counter += 1
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
-#        continue
     else:
         # Resets alarm
         signal.alarm(0)
@@ -98,6 +161,12 @@ parser.add_argument("taxlistpath", nargs="?", type=argparse.FileType('r'), help=
 parser.add_argument("output", nargs="?", type=str, help='specify output path, else cwd')
 parser.add_argument("ftpurl", nargs="?", action='store', type=str, help='specify top level ftp url to search down from')
 
+parser.add_argument("-r", "--rename", action="store_true", help='' )
+parser.add_argument("-z", "--zip", action="store_true", help='specifies to untar/gunzip zipped .tgz files. Has to be used with the -r flag')
+parser.add_argument("-c", "--concat", action="store_true", help="concatenates contigs split into several .faa/.fna/etc. files. Has to be used with the -r flag")
+
+
+# below are planned but as-of-yet unimplemented arguments
 # parser.add_argument("-f", "--family", action="store_true", help='organism family to download genomes from')
 # parser.add_argument("-p", "-phylum", action="store_true", help='phyla to download genomes from')
 # parser.add_argument("--fna", action="store_true", help='download .fna files')
@@ -108,6 +177,10 @@ parser.add_argument("ftpurl", nargs="?", action='store', type=str, help='specify
 
 # returns the arguments given to the "args" variable
 args = parser.parse_args()
+
+concat = args.concat
+zipped = args.zip
+rename = args.rename
 
 # makes a the text list into a python list
 taxlist = args.taxlistpath.read().splitlines() # this should be a capitalised list of species genus
@@ -261,10 +334,11 @@ for key in genome_subfolders.keys():
 
 # clean_compare = [i[13:-1] for i in compare]
 
+if rename:
+    renamer(out)
 
 
 # download: urllib.urlretrieve('ftp://server/path/to/file', 'file')
 
 
-print "done"
-# ftp.quit()
+print "All done at %s" % (datetime.datetime.now())
