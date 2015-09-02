@@ -332,7 +332,7 @@ for key in genome_subfolders.keys():
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                     elif "BACTERIA_ASSEMBLY" in pwd:
                         print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
-                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov") + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), out + str(key) + "/" + str(fil))
+                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
