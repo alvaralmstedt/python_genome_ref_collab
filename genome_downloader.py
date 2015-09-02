@@ -103,6 +103,7 @@ def renamer(user_directory):
 
 # tries to go into every directory to check if it is a directory. This can take a little while.
 def testifDirectory(ftp, filenames):
+    global counter
     files.sort()
     # get the files and directories contained in the current directory
     for name in filenames:
@@ -126,6 +127,7 @@ def testifDirectory(ftp, filenames):
                 indexer(name)
                 ftp.cwd("..")
                 ftp.cwd("..")
+            counter += 1
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
             continue
@@ -138,14 +140,12 @@ def testifDirectory(ftp, filenames):
 
 # This function indexes the contents of each Specie-folder to the genome_subfolder dict
 def indexer(dirs):
-    global counter
     signal.alarm(30)
     try:
         if dirs != "CLUSTERS" and counter < 10:
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
-            counter += 1
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
     else:
