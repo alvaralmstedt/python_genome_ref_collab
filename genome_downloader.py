@@ -118,7 +118,7 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd("/genomes/Bacteria")
                 else:
                     ftp.cwd('..')
-            elif name == "ASSEMBLY_BACTERIA" and counter < 10:
+            elif "ASSEMBLY_BACTERIA" in pwd and counter < 10:
                 ftp.cwd(name)
                 print name
                 ass_cwd = ftp.nlst()
