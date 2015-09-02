@@ -10,6 +10,7 @@ import datetime
 import signal
 import tarfile
 
+counter = 0
 directories = []
 
 class TimeoutException(Exception):  # Custom exception class
@@ -284,7 +285,6 @@ ftpdir = ftp.retrlines('NLST', files.append)
 #        if r[56:] != "all" and r[56:] != "3 all":
 #            stripped = r[56:].strip()
 #            directories.append(stripped)
-counter = 0
 genome_subfolders = {}
 testifDirectory(ftp, files)
 
