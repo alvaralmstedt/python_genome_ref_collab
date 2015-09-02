@@ -232,6 +232,11 @@ if ftpurl is not None:
     elif ftpurl[-9:] == "es/Fungi/" or ftpurl[-9:] == "mes/Fungi":
         ftp.cwd("genomes")
         ftp.cwd("Fungi")
+    elif ftpurl[-12:] == "LY_BACTERIA/" or ftpurl[-12:] == "BLY_BACTERIA":
+        ftp.cwd("genomes")
+        ftp.cwd("ASSEMBLY_BACTERIA")
+        ass_cwd = ftp.nlst()
+        ftp.cwd(str(ass_cwd[0]))
     else:
         print "Url mismatch detected, defaulting to searching in /genomes/"
         ftp.cwd("genomes")
