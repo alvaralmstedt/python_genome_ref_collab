@@ -109,7 +109,7 @@ def testifDirectory(ftp, filenames):
     for name in filenames:
         signal.alarm(10)  # alarm is rung after 10 seconds
         try:
-            if name != "all" and name != "ASSEMBLY_BACTERIA":
+            if name != "all" and "ASSEMBLY_BACTERIA" not in pwd:
                 ftp.cwd(name)
                 directories.append(name)
                 print name
