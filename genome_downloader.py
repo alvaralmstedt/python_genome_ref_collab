@@ -107,7 +107,7 @@ def testifDirectory(ftp, filenames):
     for name in filenames:
         signal.alarm(10)  # alarm is rung after 10 seconds
         try:
-            if name != "all":
+            if name != "all" and name != "BACTERIA_ASSEMBLY":
                 ftp.cwd(name)
                 directories.append(name)
                 print name
@@ -116,6 +116,14 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd("/genomes/Bacteria")
                 else:
                     ftp.cwd('..')
+            elif name == "BACTERIA_ASSEMBLY":
+                ftp.cwd(name)
+                print name
+                ass_cwd = ftp.nlst()
+                ftp.cwd(str(ass_cwd[0]))
+                indexer(name)
+                ftp.cwd("..")
+                ftp.cwd("..")
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
             continue
@@ -235,8 +243,8 @@ if ftpurl is not None:
     elif ftpurl[-12:] == "LY_BACTERIA/" or ftpurl[-12:] == "BLY_BACTERIA":
         ftp.cwd("genomes")
         ftp.cwd("ASSEMBLY_BACTERIA")
-        ass_cwd = ftp.nlst()
-        ftp.cwd(str(ass_cwd[0]))
+#        ass_cwd = ftp.nlst()
+#        ftp.cwd(str(ass_cwd[0]))
     else:
         print "Url mismatch detected, defaulting to searching in /genomes/"
         ftp.cwd("genomes")
@@ -256,6 +264,7 @@ print "\n"
 
 ftp.set_debuglevel(0)
 
+pwd = ftp.pwd()
 
 files = []
 
