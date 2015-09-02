@@ -109,7 +109,7 @@ def testifDirectory(ftp, filenames):
     for name in filenames:
         signal.alarm(10)  # alarm is rung after 10 seconds
         try:
-            if name != "all" and name != "BACTERIA_ASSEMBLY":
+            if name != "all" and name != "ASSEMBLY_BACTERIA":
                 ftp.cwd(name)
                 directories.append(name)
                 print name
@@ -118,7 +118,7 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd("/genomes/Bacteria")
                 else:
                     ftp.cwd('..')
-            elif name == "BACTERIA_ASSEMBLY" and counter < 10:
+            elif name == "ASSEMBLY_BACTERIA" and counter < 10:
                 ftp.cwd(name)
                 print name
                 ass_cwd = ftp.nlst()
@@ -326,11 +326,11 @@ for key in genome_subfolders.keys():
 #                        download(key, fil, out)
 #                        print "retrbinary, yay!"
 #                    except Exception:
-                    if "BACTERIA_ASSEMBLY" not in pwd:
+                    if "ASSEMBLY_BACTERIA" not in pwd:
                         print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
-                    elif "BACTERIA_ASSEMBLY" in pwd:
+                    elif "ASSEMBLY_BACTERIA" in pwd:
                         print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
