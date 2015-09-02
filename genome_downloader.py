@@ -138,6 +138,7 @@ def testifDirectory(ftp, filenames):
 
 # This function indexes the contents of each Specie-folder to the genome_subfolder dict
 def indexer(dirs):
+    global counter
     signal.alarm(30)
     try:
         if dirs != "CLUSTERS" and counter < 10:
