@@ -138,7 +138,6 @@ def testifDirectory(ftp, filenames):
 # This function indexes the contents of each Specie-folder to the genome_subfolder dict
 def indexer(dirs):
     signal.alarm(30)
-    counter = 0
     try:
         if dirs != "CLUSTERS" and counter < 10:
             subfolder = ftp.nlst()
@@ -300,7 +299,7 @@ testifDirectory(ftp, files)
 print "starting search"
 
 # This will iterate over the keys in genome_subfolders dict and match to user provided taxlist
-
+counter = 0
 lstnam = []
 filnam = ""
 
