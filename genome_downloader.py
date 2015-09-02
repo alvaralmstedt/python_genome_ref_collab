@@ -120,6 +120,7 @@ def testifDirectory(ftp, filenames):
                 ftp.cwd(name)
                 print name
                 ass_cwd = ftp.nlst()
+                annoying_folders[str(name)] = str(ass_cwd[0])
                 ftp.cwd(str(ass_cwd[0]))
                 indexer(name)
                 ftp.cwd("..")
@@ -137,12 +138,13 @@ def testifDirectory(ftp, filenames):
 # This function indexes the contents of each Specie-folder to the genome_subfolder dict
 def indexer(dirs):
     signal.alarm(30)
+    counter = 0
     try:
-        if dirs != "CLUSTERS":
+        if dirs != "CLUSTERS" and counter < 10:
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
-#            counter += 1
+            counter += 1
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
     else:
@@ -267,7 +269,7 @@ ftp.set_debuglevel(0)
 pwd = ftp.pwd()
 
 files = []
-
+annoying_folders = {}
 ftpdir = ftp.retrlines('NLST', files.append)
 # ftpdir = ftpdir.splitlines()
 
@@ -297,7 +299,6 @@ testifDirectory(ftp, files)
 
 print "starting search"
 
-pwd = ftp.pwd()
 # This will iterate over the keys in genome_subfolders dict and match to user provided taxlist
 
 lstnam = []
@@ -325,9 +326,14 @@ for key in genome_subfolders.keys():
 #                        download(key, fil, out)
 #                        print "retrbinary, yay!"
 #                    except Exception:
-                    print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
-                    urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
-                    print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
+                    if "BACTERIA_ASSEMBLY" not in pwd:
+                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
+                        print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
+                    elif "BACTERIA_ASSEMBLY" in pwd:
+                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov") + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" str(fil), out + str(key) + "/" + str(fil))
+                        print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
                     # print something to error file here
