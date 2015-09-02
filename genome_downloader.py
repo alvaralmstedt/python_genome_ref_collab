@@ -284,7 +284,7 @@ ftpdir = ftp.retrlines('NLST', files.append)
 #        if r[56:] != "all" and r[56:] != "3 all":
 #            stripped = r[56:].strip()
 #            directories.append(stripped)
-
+counter = 0
 genome_subfolders = {}
 testifDirectory(ftp, files)
 
@@ -299,7 +299,6 @@ testifDirectory(ftp, files)
 print "starting search"
 
 # This will iterate over the keys in genome_subfolders dict and match to user provided taxlist
-counter = 0
 lstnam = []
 filnam = ""
 
