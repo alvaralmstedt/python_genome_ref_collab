@@ -128,6 +128,7 @@ def testifDirectory(ftp, filenames):
                 ftp.cwd("..")
                 ftp.cwd("..")
                 counter += 1
+                print counter
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
             continue
