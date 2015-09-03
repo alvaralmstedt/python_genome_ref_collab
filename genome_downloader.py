@@ -122,10 +122,11 @@ def testifDirectory(ftp, filenames):
                 ftp.cwd(name)
                 print name
                 ass_cwd = ftp.nlst()
-                annoying_folders[str(name)] = str(ass_cwd[0])
-                ftp.cwd(str(ass_cwd[0]))
-                indexer(name)
-                ftp.cwd("..")
+                for folder in ass_cwd:
+                    annoying_folders[name].append(folder)
+                    ftp.cwd(str(ass_cwd[folder]))
+                    indexer(name)
+                    ftp.cwd("..")
                 ftp.cwd("..")
                 counter += 1
                 print counter
@@ -247,8 +248,6 @@ if ftpurl is not None:
     elif ftpurl[-12:] == "LY_BACTERIA/" or ftpurl[-12:] == "BLY_BACTERIA":
         ftp.cwd("genomes")
         ftp.cwd("ASSEMBLY_BACTERIA")
-#        ass_cwd = ftp.nlst()
-#        ftp.cwd(str(ass_cwd[0]))
     else:
         print "Url mismatch detected, defaulting to searching in /genomes/"
         ftp.cwd("genomes")
@@ -271,7 +270,7 @@ ftp.set_debuglevel(0)
 pwd = ftp.pwd()
 
 files = []
-annoying_folders = {}
+annoying_folders = {}       # initialises dict used for extra folder step in ASSEMBLY_BACTERIA
 ftpdir = ftp.retrlines('NLST', files.append)
 # ftpdir = ftpdir.splitlines()
 
@@ -331,9 +330,13 @@ for key in genome_subfolders.keys():
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                     elif "ASSEMBLY_BACTERIA" in pwd:
-                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
-                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), out + str(key) + "/" + str(fil))
-                        print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
+
+                        for file_id in fil:
+                            print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                            ""urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" +
+                                                 str(annoying_folders[key[fil]]) + "/" + str(key[fil[file_id]]),
+                                                 out + str(key) + "/" + str(fil) + str(file_id))""
+                            print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
                     # print something to error file here
