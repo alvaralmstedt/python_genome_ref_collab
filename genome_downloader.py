@@ -335,7 +335,7 @@ for key in genome_subfolders.keys():
 #                        for file_id in fil:
 #                        print file_id
                         print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), datetime.datetime.now())
-                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(genome_subfolders[key[genome_subfolders.index(key)]]), out + str(key) + "/" + str(fil) + str(file_id))
+                        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
