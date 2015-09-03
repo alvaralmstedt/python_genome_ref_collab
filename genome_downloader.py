@@ -333,6 +333,7 @@ for key in genome_subfolders.keys():
                     elif "ASSEMBLY_BACTERIA" in pwd:
                         print "elif passed"
                         for file_id in fil:
+                            print file_id
                             print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(genome_subfolders[key]), datetime.datetime.now())
                             urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(key[fil[file_id]]), out + str(key) + "/" + str(fil) + str(file_id))
                             print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
