@@ -327,11 +327,11 @@ for key in genome_subfolders.keys():
 #                        print "retrbinary, yay!"
 #                    except Exception:
                     if "ASSEMBLY_BACTERIA" not in pwd:
-                        print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
+                        print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + key, datetime.datetime.now())
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                     elif "ASSEMBLY_BACTERIA" in pwd:
-
+                        print "elif passed"
                         for file_id in fil:
                             print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
                             urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key[fil]]) + "/" + str(key[fil[file_id]]), out + str(key) + "/" + str(fil) + str(file_id))
