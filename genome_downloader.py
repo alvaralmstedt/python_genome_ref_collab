@@ -124,6 +124,7 @@ def testifDirectory(ftp, filenames):
                 ass_cwd = ftp.nlst()
                 annoying_folders[name] = {}
                 for folder in ass_cwd:
+                    annoying_folders[name] = []
                     annoying_folders[name].append(folder)
                     ftp.cwd(str(ass_cwd[ass_cwd.index(folder)]))
                     indexer(name)
