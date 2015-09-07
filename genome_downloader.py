@@ -290,6 +290,7 @@ ftpdir = ftp.retrlines('NLST', files.append)
 genome_subfolders = {}
 testifDirectory(ftp, files)
 
+print annoying_folders
 # print directories.sort()
 
 # this dict will contain all directories in genomes as keys and lists of their contents as values
@@ -334,8 +335,8 @@ for key in genome_subfolders.keys():
                         print "elif passed"
                         for file_id in annoying_folders[key]:
                             print file_id
-                            print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(file_id), datetime.datetime.now())
-                            urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(file_id) + "/" + str(fil), out + str(key) + "/" + str(fil))
+                            print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(annoying_folders[key]), datetime.datetime.now())
+                            urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(file_id), out + str(key) + "/" + str(fil))
                             print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
 
                 except Exception:
