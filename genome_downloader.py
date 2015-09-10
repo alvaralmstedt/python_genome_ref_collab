@@ -27,6 +27,8 @@ signal.signal(signal.SIGALRM, timeout_handler)
 def concatenate(f_end, folder, namae):
     if namae.endswith(str(f_end)):
         print str(f_end)
+        if "ASSEMBLY_BACTERIA" in pwd:
+            folder = os.path.dirname(os.path.realpath(folder))
         with open(str(folder) + ".concat" + str(f_end), 'a') as outfile:
             print "before if %s" % namae
             completed = False
@@ -385,6 +387,8 @@ for key in genome_subfolders.keys():
                                 print "our path after dl-loop is " + str(ftp.pwd())
                                 ftp.cwd("..")
                                 print "our path after cwd after dl-loop is " + str(ftp.pwd())
+                                if rename:
+                                    renamer(out + str(key))
                             except ftplib.error_perm:
                                 print "%s is not a directory, continuing" % fil
                                 continue
@@ -418,9 +422,12 @@ for key in genome_subfolders.keys():
 
 # clean_compare = [i[13:-1] for i in compare]
 
-if rename:
+if rename and "ASSEMBLY_BACTERIA" not in pwd:
     renamer(out)
-
+elif rename and "ASSEMBLY_BACTERIA" in pwd:
+    zipped = None
+    concat = None
+    renamer(out)
 
 # download: urllib.urlretrieve('ftp://server/path/to/file', 'file')
 
