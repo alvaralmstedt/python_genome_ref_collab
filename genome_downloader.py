@@ -120,15 +120,18 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd('..')
             elif "ASSEMBLY_BACTERIA" in pwd and counter < 10:
                 ftp.cwd(name)
-                print name
+                print "inside elif ASSEMBLY_BACTERIA"
+                print "name: " + str(name)
                 ass_cwd = ftp.nlst()
-                annoying_folders[name] = {}
-                for folder in ass_cwd:
-                    annoying_folders[name] = []
-                    annoying_folders[name].append(folder)
-                    ftp.cwd(str(ass_cwd[ass_cwd.index(folder)]))
-                    indexer(name)
-                    ftp.cwd("..")
+                print "ass_cwd: " + str(ass_cwd)
+                annoying_folders[name] = ass_cwd
+#                for folder in ass_cwd:
+#                annoying_folders[name].append(folder)
+#                ftp.cwd(str(ass_cwd[ass_cwd.index(folder)]))
+                print str(ftp.pwd())
+                indexer(name)
+#                indexer2(name, annoying_folders[name])
+#                ftp.cwd("..")
                 ftp.cwd("..")
                 counter += 1
                 print counter
@@ -150,6 +153,27 @@ def indexer(dirs):
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
+    except TimeoutException:
+        print "Timed out after 30 seconds, continuing"
+    else:
+        # Resets alarm
+        signal.alarm(0)
+
+
+def indexer2(dirs, anf):
+    signal.alarm(30)
+    try:
+        if counter < 10:
+            subfolder = ftp.nlst()
+            print "subfolder: " + str(subfolder)
+            print "anf: " + str(anf)
+            print "dirs: " + str(dirs)
+            print str(ftp.pwd())
+            ftp.cwd(str(dirs))
+#            print str(ftp.pwd())
+            for i in subfolder:
+                print "indexing %s/%s at time: %s" % (dirs, str(subfolder[subfolder.index(i)]), datetime.datetime.now())
+                genome_subfolders[dirs] = i
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
     else:
@@ -312,6 +336,8 @@ filnam = ""
 # I may put this into a function later so that some variables can be altered.
 # So far it only matches to folders in the base genomes/ directory.
 
+print "before loop, we are in %s" % (ftp.pwd())
+
 iteration = 0
 iteration2 = 0
 for key in genome_subfolders.keys():
@@ -333,12 +359,44 @@ for key in genome_subfolders.keys():
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
                     elif "ASSEMBLY_BACTERIA" in pwd:
-                        print "elif passed"
-                        for file_id in annoying_folders[key]:
-                            print file_id
-                            print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(annoying_folders[key]), datetime.datetime.now())
-                            urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(file_id), out + str(key) + "/" + str(fil))
-                            print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
+                            print "inside elif"
+                            each_link = "ftp://ftp.wip.ncbi.nlm.nih.gov" + str(pwd) + "/" + str(key) + "/" + \
+                                        str(fil)
+                            print "each_link " + each_link
+
+                            try:
+                                print "inside try, changing directory to %s" % (str(key))
+                                print "our path before cwd is %s" % str(ftp.pwd())
+                                ftp.cwd(str(key) + "/" + str(fil))
+                                print "our path before dl-loop is %s" % (str(ftp.pwd()))
+
+                                assembly_bacteria_files = ftp.nlst()
+
+                                print "assembly_bacteria_files are: %s" % assembly_bacteria_files
+                                for assembly_bacteria_file in assembly_bacteria_files:
+#                                    ftp.cwd(str(fil))
+                                    if not os.path.exists(str(out) + str(key) + "/" + str(fil)):
+                                        print "Creating directory: %s" % (str(out) + str(key) + "/" + str(fil))
+                                        os.makedirs(out + str(key) + "/" + str(fil))
+                                    print " inside dl-loop, pwd is: %s" % (str(ftp.pwd()))
+                                    print "downloading %s from %s to %s at %s" % (str(assembly_bacteria_file), str(each_link), str(out) + str(key) + "/" + str(fil), datetime.datetime.now())
+                                    urllib.urlretrieve(str(each_link) + "/" + str(assembly_bacteria_file), str(out) + str(key) + "/" + str(fil) + "/" + str(assembly_bacteria_file))
+                                    print "done"
+                                print "our path after dl-loop is " + str(ftp.pwd())
+                                ftp.cwd("..")
+                                print "our path after cwd after dl-loop is " + str(ftp.pwd())
+                            except ftplib.error_perm:
+                                print "%s is not a directory, continuing" % fil
+                                continue
+#                            ftp.cwd("..")
+                            ftp.cwd("..")
+                            print "path at the end of try is %s" % str(ftp.cwd())
+                        # print "elif passed"
+                        # for file_id in annoying_folders[key]:
+                        #     print file_id
+                        #     print "Downloading %s from %s via urrlib at %s" % (fil, pwd + "/" + str(key) + "/" + str(annoying_folders[key]), datetime.datetime.now())
+                        #     urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(annoying_folders[key]) + "/" + str(file_id), out + str(key) + "/" + str(fil))
+                        #     print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
 
                 except Exception:
                     print "%s couldn't be downloaded at time %s" % (fil, datetime.datetime.now())
