@@ -10,7 +10,7 @@ import datetime
 import signal
 import tarfile
 
-counter = 0
+counter = 0         # initialises counter, only used for testing
 directories = []
 
 class TimeoutException(Exception):  # Custom exception class
@@ -24,6 +24,8 @@ def timeout_handler(signum, frame):  # Custom signal handler
 # Changes the behavior of the SIGLARM
 signal.signal(signal.SIGALRM, timeout_handler)
 
+
+# This function concatenates unzipped small files with other files in that folder with the same file-ending
 def concatenate(f_end, folder, namae):
     if namae.endswith(str(f_end)):
         print str(f_end)
@@ -41,7 +43,7 @@ def concatenate(f_end, folder, namae):
             if completed:
                 os.remove(str(namae))
 
-
+# This main fucntion for renaming the files. Also utilises the concatenate function if specified on the
 def renamer(user_directory):
     if zipped:
         for subdir in os.listdir(user_directory):
@@ -103,7 +105,7 @@ def renamer(user_directory):
 
 
 
-# tries to go into every directory to check if it is a directory. This can take a little while.
+# Tries to go into every directory to check if it is a directory and indexes the content. This can take a little while.
 def testifDirectory(ftp, filenames):
     global counter
     files.sort()
@@ -120,7 +122,7 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd("/genomes/Bacteria")
                 else:
                     ftp.cwd('..')
-            elif "ASSEMBLY_BACTERIA" in pwd and counter < 10:
+            elif "ASSEMBLY_BACTERIA" in pwd:        # can add counter limiter here for testing
                 ftp.cwd(name)
                 print "inside elif ASSEMBLY_BACTERIA"
                 print "name: " + str(name)
@@ -135,7 +137,7 @@ def testifDirectory(ftp, filenames):
 #                indexer2(name, annoying_folders[name])
 #                ftp.cwd("..")
                 ftp.cwd("..")
-                counter += 1
+#                counter += 1       #counter is only to speed up testing
                 print counter
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
@@ -151,7 +153,7 @@ def testifDirectory(ftp, filenames):
 def indexer(dirs):
     signal.alarm(30)
     try:
-        if dirs != "CLUSTERS" and counter < 10:
+        if dirs != "CLUSTERS":          # add "and if counter < 10" here for testing
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
@@ -162,7 +164,7 @@ def indexer(dirs):
         signal.alarm(0)
 
 
-def indexer2(dirs, anf):
+def indexer2(dirs, anf):            # indexer2 is currently not used for anything. Delete later.
     signal.alarm(30)
     try:
         if counter < 10:
@@ -360,7 +362,7 @@ for key in genome_subfolders.keys():
                         print "Downloading %s via urrlib at %s" % (fil, datetime.datetime.now())
                         urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + "/" + str(pwd) + "/" + str(key) + "/" + str(fil), out + str(key) + "/" + str(fil))
                         print "%s was downloaded to the folder %s at time: %s" % (fil, key, datetime.datetime.now())
-                    elif "ASSEMBLY_BACTERIA" in pwd:
+                    elif "ASSEMBLY_BACTERIA" in pwd:  # Code in this elif is run if the input url was .../ASSEMBLY_BACTERIA/
                             print "inside elif"
                             each_link = "ftp://ftp.wip.ncbi.nlm.nih.gov" + str(pwd) + "/" + str(key) + "/" + \
                                         str(fil)
