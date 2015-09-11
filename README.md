@@ -11,7 +11,7 @@ genome_downloader.py will match the species genuses from your list to the availi
 
 genome_rename.py will gunzip and untar your downloaded genomes and give append the species name to the start of the file. This will currently only work for compressed .tar.gz files ( like the ones in /Bacteria_DRAFT/ or /ASSEMBLY_BACTERIA/).
 
-[in file] : Full path to the file that contains genus names (capitalised) that you want to download member species from.
+[in file] : Full path to the file that contains genus names (capitalised, one name per line) that you want to download member species from. The script will match these names to the beginning of all folders in the url you provided.
 
 [output] : Full path to the folder where you want youre species folder to be placed. The files will be placed into these species folders. If you download from /ASSEMBLY_BACTERIA/, there will be another set of folders inside the species folders which contains your files (unless you choose to concatenate them, in which case the will be directly in the species folder).
 
@@ -21,4 +21,4 @@ genome_rename.py will gunzip and untar your downloaded genomes and give append t
 
 [-z] : Zip. Or rather unzip. This unzips all files that have the file-ending ".tgz" (gzipped tarballs)
 
-[-c] : This concatenates all files in the same folder with the same file ending. Made to be used with the [-z] flag because the ".tgz" (zipped) tarballs often contains hundreds of smaller files (individual contigs). The concatenated content will be in files with ".concat." in frnot of the file-ending. The small files will be deleted after the concatenation is completed.
+[-c] : This concatenates all files in the same folder with the same file ending. Made to be used with the [-z] flag because the ".tgz" (zipped) tarballs often contains hundreds of smaller files (individual contigs). The concatenated content will be in files with ".concat." in front of the file-ending. The small files will be deleted after the concatenation is completed.
