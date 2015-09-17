@@ -43,7 +43,7 @@ def concatenate(f_end, folder, namae):
             if completed:
                 os.remove(str(namae))
 
-# This main fucntion for renaming the files. Also utilises the concatenate function if specified on the
+# This main fucntion for renaming the files. Also utilises the concatenate function if specified as argument on CL
 def renamer(user_directory):
     if zipped:
         for subdir in os.listdir(user_directory):
@@ -138,7 +138,7 @@ def testifDirectory(ftp, filenames):
 #                ftp.cwd("..")
                 ftp.cwd("..")
 #                counter += 1       #counter is only to speed up testing
-                print counter
+#                print counter
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
             continue
@@ -204,7 +204,7 @@ parser.add_argument("taxlistpath", nargs="?", type=argparse.FileType('r'), help=
 parser.add_argument("output", nargs="?", type=str, help='specify output path, else cwd')
 parser.add_argument("ftpurl", nargs="?", action='store', type=str, help='specify top level ftp url to search down from')
 
-parser.add_argument("-r", "--rename", action="store_true", help='' )
+parser.add_argument("-r", "--rename", action="store_true", help='specified whether you want the files do be renamed by the species it corresponds to.' )
 parser.add_argument("-z", "--zip", action="store_true", help='specifies to untar/gunzip zipped .tgz files. Has to be used with the -r flag')
 parser.add_argument("-c", "--concat", action="store_true", help="concatenates contigs split into several .faa/.fna/etc. files. Has to be used with the -r flag")
 
