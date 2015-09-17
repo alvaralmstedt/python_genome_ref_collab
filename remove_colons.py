@@ -8,9 +8,9 @@ import datetime
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("output", nargs="?", type=str, help='specify output path, else cwd')
+parser.add_argument("path", nargs="?", type=str, help='specify directory path')
 args = parser.parse_args()
-out = str(args.output) + "/"
+out = str(args.path) + "/"
 
 file_list = os.listdir(out)
 
