@@ -18,7 +18,7 @@ folder_contents = os.listdir(out)
 
 for each_file in folder_contents:
     with open(each_file, 'r') as infile:
-        with open(name + "_" + str(each_file)[-4:], 'a') as outfile:
+        with open(namn + "_" + str(each_file)[-4:], 'a') as outfile:
             for line in infile.readlines():
                 outfile.write(line)
 
