@@ -110,10 +110,11 @@ def testifDirectory(ftp, filenames):
     global counter
     files.sort()
     # get the files and directories contained in the current directory
+    counter = 0
     for name in filenames:
         signal.alarm(10)  # alarm is rung after 10 seconds
         try:
-            if name != "all" and "ASSEMBLY_BACTERIA" not in pwd:
+            if name != "all" and "ASSEMBLY_BACTERIA" not in pwd and counter < 5:
                 ftp.cwd(name)
                 directories.append(name)
                 print name
@@ -122,7 +123,9 @@ def testifDirectory(ftp, filenames):
                     ftp.cwd("/genomes/Bacteria")
                 else:
                     ftp.cwd('..')
-            elif "ASSEMBLY_BACTERIA" in pwd:        # can add counter limiter here for testing
+                    
+                counter +=1
+            elif "ASSEMBLY_BACTERIA" in pwd and counter < 5:        # can add counter limiter here for testing
                 ftp.cwd(name)
                 print "inside elif ASSEMBLY_BACTERIA"
                 print "name: " + str(name)
@@ -137,7 +140,7 @@ def testifDirectory(ftp, filenames):
 #                indexer2(name, annoying_folders[name])
 #                ftp.cwd("..")
                 ftp.cwd("..")
-#                counter += 1       #counter is only to speed up testing
+                counter += 1       #counter is only to speed up testing
 #                print counter
         except ftplib.error_perm:
             print "%s is not a directory, continuing" % name
@@ -153,10 +156,11 @@ def testifDirectory(ftp, filenames):
 def indexer(dirs):
     signal.alarm(30)
     try:
-        if dirs != "CLUSTERS":          # add "and if counter < 10" here for testing
+        if dirs != "CLUSTERS" :          # add "and if counter < 10" here for testing
             subfolder = ftp.nlst()
             print "indexing %s at time: %s" % (dirs, datetime.datetime.now())
             genome_subfolders[dirs] = subfolder
+            
     except TimeoutException:
         print "Timed out after 30 seconds, continuing"
     else:
@@ -317,7 +321,8 @@ ftpdir = ftp.retrlines('NLST', files.append)
 #            stripped = r[56:].strip()
 #            directories.append(stripped)
 genome_subfolders = {}
-testifDirectory(ftp, files)
+
+#testifDirectory(ftp, files)
 
 print annoying_folders
 # print directories.sort()
@@ -342,6 +347,47 @@ filnam = ""
 
 print "before loop, we are in %s" % (ftp.pwd())
 
+
+
+def searchAllDirectories(ftpPath, files):
+    files.sort()
+    print "Traversing .. "
+    traverse(ftpPath, files, ftpPath)
+    
+def traverse(ftpPath, filenames, currentPath):
+    print "path is " + ftpPath
+    
+    for name in filenames:
+     try:
+        print name
+        ftp.cwd(name)
+        if name != "all" and counter < 5:   
+           currentPath = currentPath + "/" + name
+      
+     except ftplib.error_perm:
+        print "%s is not a directory, continuing" % name
+        #make dir...
+        #download ..
+         
+        print "downloading from " + "ftp://ftp.wip.ncbi.nlm.nih.gov" +  str(currentPath)  + "/" + name
+        urllib.urlretrieve("ftp://ftp.wip.ncbi.nlm.nih.gov" + str(currentPath) + "/" + name,
+        "/Users/diana/Desktop/bla/" + name )
+        
+        currentPath = ftpPath
+        continue
+        
+     except TimeoutException:
+        print "%s caused a timeout after 10 seconds" % name
+        continue
+        
+    else:
+        signal.alarm(0)  # resets alarm   
+    return
+       
+ftpPath = "ftp.wip.ncbi.nlm.nih.gov" 
+searchAllDirectories(ftp.pwd(), files)
+
+'''
 iteration = 0
 iteration2 = 0
 for key in genome_subfolders.keys():
@@ -434,4 +480,5 @@ elif rename and "ASSEMBLY_BACTERIA" in pwd:
 # download: urllib.urlretrieve('ftp://server/path/to/file', 'file')
 
 
-print "All done at %s" % (datetime.datetime.now())
+print "All done at %s" % (datetime.datetime.now()) 
+'''

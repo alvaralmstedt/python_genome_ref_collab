@@ -1,0 +1,12 @@
+genome_downloader.py /home/alvar/data/genus_lists/families/flavobacteriales/Cryomorphaceae.list.txt /nobackup/data5/data/references/bacterial_families/Flavobacteriales2/Cryomorphaceae_ASSEMBLY ftp://ftp.wip.ncbi.nlm.nih.gov/genomes/ASSEMBLY_BACTERIA -r -z -c
+/Users/diana/Desktop/genomes/python_genome_ref_collab
+
+
+
+genome_downloader.py /home/alvar/data/genus_lists/families/pseudomonadales/Pseudomonadaceae.list.txt /nobackup/data5/data/references/bacterial_families/Pseudomonadales2/Pseudomonadaceae ftp://ftp.wip.ncbi.nlm.nih.gov/genomes/Bacteria 
+
+
+
+me:
+
+genome_downloader.py /Users/diana/Desktop/genomes/python_genome_ref_collab/input.txt /Users/diana/Desktop/genomes/python_genome_ref_collab/output ftp://ftp.wip.ncbi.nlm.nih.gov/genomes/Bacteria 
