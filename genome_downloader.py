@@ -43,7 +43,7 @@ def concatenate(f_end, folder, namae):
             if completed:
                 os.remove(str(namae))
 
-# This main fucntion for renaming the files. Also utilises the concatenate function if specified as argument on CL
+# This main function for renaming the files. Also utilises the concatenate function if specified as argument on CL
 def renamer(user_directory):
     if zipped:
         for subdir in os.listdir(user_directory):
