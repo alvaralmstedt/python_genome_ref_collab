@@ -1,8 +1,9 @@
 #!/usr/local/opt/bin/python
 
 import argparse
-import os
-import subprocess
+#import os
+#import subprocess
+import sys
 
 parser = argparse.ArgumentParser()
 parser .add_argument("fun", nargs="?", type=str, help='function to be run')
@@ -12,56 +13,106 @@ parser.add_argument("species", nargs="?", type=str, help='species name goes here
 
 args = parser.parse_args()
 
-function_to_be_used = str(args.fun)
-comppath = str(args.completedpath)
-tabbedpath = str(args.tabpath)
-species = str(args.species)
+#function_to_be_used = str(args.fun)
+#comppath = str(args.completedpath)
+#tabbedpath = str(args.tabpath)
+#species = str(args.species)
 # cwd = os.getcwd() + "/"
 
-# Initialises (creates) files with the correct species filename
-def toucher(inpath, outpath, spec):
-    infiles = os.listdir(inpath)
-    for each_file in infiles:
-        with open(inpath + "/" + each_file) as infile:
-            for line in infile.readlines():
-                if line.startswith(species) and not os.path.isfile(outpath + "/" + spec + ".aln"):
-                    subprocess.call(['touch', outpath + "/" + spec + ".aln"])
+class FastaSeq(object):
+	def __init__(self, name, seq):
+		self.name = name
+		self.seq = seq
 
-# Inserts header from the correct species into output file
-def headers(sourcepath, destpath):
-    infiles = os.listdir(sourcepath)
-    outfiles = os.listdir(destpath)
-    for namedfiles in outfiles:
-        for each_file in infiles:
-            with open(sourcepath + "/" + each_file) as infile:
-                for line in infile:
-                    splitlines = line.split("   ")
-                    for word in splitlines:
-                        if word.startswith(str(namedfiles)):
-                            with open(namedfiles, "a") as destination:
-                                destination.write(str(line))
+	def header(self):
+		return self.name[1:]
 
-# Inserts the sequences from the correct species into the correct files
-def sequences(sourcepath, destpath):
-    infiles = os.listdir(sourcepath)
-    outfiles = os.listdir(destpath)
-    for namedfiles in outfiles:
-        for each_file in infiles:
-            with open(sourcepath + "/" + each_file) as infile:
-                for lines in infile.readlines():
-                    if lines.startswith(namedfiles):
-                        with open(namedfiles, "a") as destination:
-                            subprocess.call(["cut", "-f2", "-d' ", str(lines)], stdout=destination)
+	def get_sequence(self):
+		return self.seq
+
+	def length(self):
+		return len(self.seq)
+	
+	def get_species_name(self):
+		return str(self.name.split("[")[1].split("]")[0])
+
+	def __str__(self):
+		return "%s%s" % (self.name, self.seq)
 
 
-if function_to_be_used == "t":
-    print "You have selected 'toucher' with paths %s, %s and species %s" % (tabbedpath, comppath, species)
-    toucher(tabbedpath, comppath, species)
-elif function_to_be_used == "h":
-    print "You have selected 'headers' with paths %s and %s" % (tabbedpath, comppath)
-    headers(tabbedpath, comppath)
-elif function_to_be_used == "s":
-    print "You have selected 'sequences' with the paths %s and %s" % (tabbedpath, comppath)
-    sequences(tabbedpath, comppath)
-else:
-    print "Please input which function to use: t = toucher; h = headers; s = sequences"
+class Alignment(object):
+
+	def __init__(self, filename):
+		self.filename = filename
+		self.length = None
+
+		# Parse the file and extract all fasta sequences.
+		self.species_names_list = []
+		self.sequence_list = []
+		with open(self.filename) as my_file:
+			for name, seq in self.read_fasta(my_file):
+				fs = FastaSeq(name, seq)
+				self.sequence_list.append(fs)
+				# Add each species name to a list.
+				self.species_names_list.append(fs.get_species_name())
+				# Extract the length of the aliged sequences.
+				if not self.length:
+					self.length = fs.length()
+	
+	def get_file_name(self):
+		return self.filename
+
+	def read_fasta(self, infile):
+		name, seq = None, []
+		for line in infile:
+			if line.startswith(">"):
+				if name: yield (name, ''.join(seq))
+				name, seq = line, []
+			else:
+				line = line.rstrip()
+				seq.append(line)
+		if name: yield (name, ''.join(seq))
+
+	
+	def get_species_names(self):
+		return self.species_names_list
+
+	def get_alignment_length(self):
+		return int(self.length)
+
+	def get_sequence(self, species):
+		for fasta_sequence in self.sequence_list:
+			if fasta_sequence.get_species_name() == species:
+				return fasta_sequence.get_sequence()
+			else:
+				return "-" * self.get_alignment_length()
+
+
+
+if __name__ == "__main__":
+	all_species_names = []
+	alignment_list = []
+	for myFile in sys.argv[1:]:
+		# Create an instace of an alignment object for each fasta file.
+		af = Alignment(myFile)
+		# Save all instances of the Alignment class in a list
+		alignment_list.append(af)
+#		print "Alignment length: ", af.get_alignment_length()
+
+		# Create master list of species names in all files.
+		for species in af.get_species_names():
+			if species not in all_species_names:
+				all_species_names.append(species)
+	
+	for species in all_species_names:
+		print ">", species
+		for alignment in alignment_list:
+#		for species in all_species_names:
+			# Generate a fasta header
+#			print len(species)				# Devel.
+#			print ">", species
+			print alignment.get_sequence(species)
+
+		
+#		print fo.get_file_name()			# Devel.
+
