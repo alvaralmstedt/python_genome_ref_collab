@@ -1,6 +1,6 @@
 >[Potentilla_alba]
 attctcgtgt
->[Drosophila sp.]
+>[Drosophila_sp.]
 attctc-tgt
 >[Aplysia californica]
 att-tcgtgt
