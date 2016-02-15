@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../py_scripts/.idea/py_scripts.iml" filepath="$PROJECT_DIR$/../py_scripts/.idea/py_scripts.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/python_genome_ref_collab.iml" filepath="$PROJECT_DIR$/.idea/python_genome_ref_collab.iml" />
     </modules>
   </component>
