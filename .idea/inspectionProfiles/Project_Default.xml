@@ -14,6 +14,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="dict.append" />
+          <option value="str.write" />
         </list>
       </option>
     </inspection_tool>
