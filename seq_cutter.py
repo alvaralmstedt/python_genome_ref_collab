@@ -85,15 +85,15 @@ class Alignment(object):
 
     def get_sequence(self, species):
         for fasta_sequence in self.sequence_list:    # !!!THIS DOES NOT LOOP!!! (for unknown reasons)
-#            print "fasta_sequence.get_species_name(): %s" % fasta_sequence.get_species_name()
-#            print len(self.sequence_list)
-#            print self.sequence_list[2]
-#            print fasta_sequence                       #Devel.
+            # print "fasta_sequence.get_species_name(): %s" % fasta_sequence.get_species_name()
+            # print len(self.sequence_list)
+            # print self.sequence_list[2]
+            # print fasta_sequence                       #Devel.
             if species == fasta_sequence.get_species_name():        #changed
                 print "type: "
                 print type(self.sequence_list)
                 return fasta_sequence.get_sequence()
-#            elif species != fasta_sequence.get_species_name():
+            # elif species != fasta_sequence.get_species_name():
 #                continue
             else:
                  print "fasta_sequence.get_species_name(): %s" % fasta_sequence.get_species_name()   #Devel
